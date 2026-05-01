@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salmon 式英語スピーチ練習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --salmon:#E8522A;--sl:#FDF0EB;--sm:#F4A585;
+  --ink:#1a1a1a;--muted:#6b6b6b;--hint:#aaa;
+  --bg:#ffffff;--raised:#f6f5f3;
+  --bd:rgba(0,0,0,0.1);--bdm:rgba(0,0,0,0.18);
+  --r:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --ink:#f0efe9;--muted:#9a9993;--hint:#666;
+    --bg:#1c1b19;--raised:#252420;
+    --bd:rgba(255,255,255,0.1);--bdm:rgba(255,255,255,0.18);
+  }
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding:0 16px}
+.app{max-width:680px;margin:0 auto;padding:2rem 0 4rem}
+.logo-row{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.logo-s{width:36px;height:36px;border-radius:8px;background:var(--salmon);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:20px;color:#fff;flex-shrink:0}
+.logo-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);line-height:1.1}
+.logo-sub{font-family:'DM Sans',sans-serif;font-weight:300;font-size:13px;color:var(--muted);margin-left:6px}
+.tagline{font-size:13px;color:var(--muted);font-weight:300;margin-top:3px}
+
+/* Key screen */
+.key-screen{max-width:480px;margin:3rem auto;text-align:center}
+.key-screen h2{font-family:'DM Serif Display',serif;font-size:22px;color:var(--ink);margin-bottom:10px}
+.key-screen p{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:1.5rem;font-weight:300}
+.key-input-wrap{display:flex;gap:8px;margin-bottom:12px;text-align:left}
+.key-input{flex:1;border-radius:var(--r);border:0.5px solid var(--bdm);padding:10px 13px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg)}
+.key-input:focus{outline:none;border-color:var(--salmon)}
+.key-note{font-size:12px;color:var(--hint);text-align:left;line-height:1.7}
+.key-note a{color:var(--salmon);text-decoration:none}
+.key-note a:hover{text-decoration:underline}
+.key-steps{background:var(--raised);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.5rem;text-align:left}
+.key-steps h3{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:8px}
+.key-steps ol{padding-left:1.2rem;font-size:13px;color:var(--muted);line-height:1.9;font-weight:300}
+.key-steps li code{font-family:monospace;background:var(--bd);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--ink)}
+
+/* Tabs */
+.tabs{display:flex;border:0.5px solid var(--bdm);border-radius:var(--r);overflow:hidden;margin-bottom:1rem;width:fit-content}
+.tab{padding:7px 15px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--muted);background:var(--bg);border:none;cursor:pointer;transition:all .15s}
+.tab:not(:last-child){border-right:0.5px solid var(--bdm)}
+.tab.on{background:var(--ink);color:var(--bg);font-weight:500}
+.tab:hover:not(.on){background:var(--raised)}
+
+/* Topic grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;margin-bottom:1rem}
+.tc{padding:10px 12px;border-radius:var(--r);border:0.5px solid var(--bd);background:var(--bg);font-size:13px;color:var(--ink);cursor:pointer;line-height:1.45;transition:all .12s}
+.tc:hover{border-color:var(--bdm);background:var(--raised)}
+.tc.sel{border:1.5px solid var(--salmon);background:var(--sl);color:var(--salmon)}
+.free-row{display:flex;gap:8px;margin-bottom:1.25rem}
+.free-in{flex:1;border-radius:var(--r);border:0.5px solid var(--bdm);padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg)}
+.free-in:focus{outline:none;border-color:var(--salmon)}
+.free-in::placeholder{color:var(--hint)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:var(--r);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .15s;border:none}
+.btn-salmon{background:var(--salmon);color:#fff}
+.btn-salmon:hover{opacity:.88}
+.btn-salmon:disabled{opacity:.38;pointer-events:none}
+.btn-primary{background:var(--ink);color:var(--bg)}
+.btn-primary:hover{opacity:.82}
+.btn-ghost{background:transparent;border:0.5px solid var(--bdm);color:var(--muted)}
+.btn-ghost:hover{background:var(--raised);color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* Progress */
+.pbar-wrap{height:3px;background:var(--raised);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
+.pbar{height:3px;background:var(--salmon);border-radius:2px;transition:width .4s}
+.strip{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.25rem}
+.sp{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11.5px;color:var(--hint);border:0.5px solid var(--bd);background:var(--bg)}
+.sp.on{background:var(--salmon);color:#fff;border-color:transparent;font-weight:500}
+.sp.done{color:var(--hint);text-decoration:line-through;background:var(--raised);border-color:transparent}
+.sp-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* Cards */
+.card{background:var(--bg);border:0.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:.75rem}
+.sname{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);margin-bottom:4px}
+.sdesc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1rem;font-weight:300}
+.hint-box{background:var(--raised);border-radius:var(--r);padding:9px 13px;font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:.75rem;border-left:2px solid var(--sm)}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;background:var(--sl);color:var(--salmon);margin-left:6px;vertical-align:middle}
+.qs-box{background:var(--sl);border-radius:var(--r);padding:11px 15px;margin-bottom:.75rem;border:0.5px solid var(--sm)}
+.qs-label{font-size:11px;font-weight:500;color:var(--salmon);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.qs-list{list-style:none}
+.qs-list li{font-size:13px;color:var(--ink);padding:3px 0;line-height:1.55;display:flex;gap:7px;font-weight:300}
+.qs-list li::before{content:"Q";font-size:10px;font-weight:500;color:var(--salmon);margin-top:3px;flex-shrink:0}
+textarea{width:100%;border-radius:var(--r);border:0.5px solid var(--bdm);padding:10px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);resize:vertical;min-height:90px;line-height:1.65;font-weight:300}
+textarea:focus{outline:none;border-color:var(--salmon)}
+
+/* Timer */
+.timer-big{font-family:'DM Serif Display',serif;font-size:56px;color:var(--ink);text-align:center;padding:.75rem 0;letter-spacing:-.02em}
+.timer-sub{text-align:center;font-size:13px;color:var(--muted);margin-bottom:1rem;font-weight:300}
+.tbar{height:4px;background:var(--raised);border-radius:2px;overflow:hidden;margin-bottom:1.25rem}
+.tfill{height:4px;background:var(--salmon);border-radius:2px;transition:width 1s linear}
+
+/* Coach bubble */
+.coach-wrap{border-radius:var(--rl);padding:1rem 1.25rem;border:0.5px solid var(--bd);background:var(--raised);margin-top:.75rem}
+.coach-label{font-size:11px;font-weight:500;color:var(--salmon);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.coach-text{font-size:14px;color:var(--ink);line-height:1.8;font-weight:300;white-space:pre-wrap}
+
+/* Loading dots */
+.dots{display:inline-flex;gap:4px}
+.dots span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:blink 1.4s infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
+
+/* Finish */
+.finish-wrap{text-align:center;padding:3rem 1rem}
+.finish-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--ink);margin-bottom:10px}
+.finish-sub{font-size:14px;color:var(--muted);margin-bottom:2rem;font-weight:300;line-height:1.7}
+
+/* Top nav */
+.top-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.topic-label{font-size:13px;color:var(--muted)}
+.topic-label strong{color:var(--ink);font-weight:500}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- APIキー入力画面 -->
+<div id="scr-key">
+  <div class="logo-row">
+    <div class="logo-s">S</div>
+    <div>
+      <div class="logo-title">Salmon <span class="logo-sub">英語スピーチ練習</span></div>
+      <div class="tagline">自分の言葉で話す力を、6つのステップで</div>
+    </div>
+  </div>
+  <div class="key-screen">
+    <div style="font-size:40px;margin-bottom:14px">🔑</div>
+    <h2>APIキーを入力して始める</h2>
+    <p>このアプリはAnthropicのClaudeをコーチとして使います。<br>APIキーはこのブラウザ内のみで使用され、外部には送信されません。</p>
+    <div class="key-steps">
+      <h3>APIキーの取得方法</h3>
+      <ol>
+        <li><a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a> にアクセス</li>
+        <li>アカウント作成 または ログイン</li>
+        <li>左メニュー「API Keys」→「Create Key」をクリック</li>
+        <li>表示された <code>sk-ant-...</code> をコピー</li>
+        <li>下の入力欄に貼り付けて「始める」を押す</li>
+      </ol>
+    </div>
+    <div class="key-input-wrap">
+      <input class="key-input" id="api-key-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off"/>
+      <button class="btn btn-salmon" onclick="saveKey()">始める →</button>
+    </div>
+    <div class="key-note">
+      ページを閉じるとキーは消えます（保存されません）。<br>
+      新規登録で $5 分の無料クレジットがもらえます。
+    </div>
+  </div>
+</div>
+
+<!-- トピック選択 -->
+<div id="scr-topic" style="display:none">
+  <div class="logo-row">
+    <div class="logo-s">S</div>
+    <div>
+      <div class="logo-title">Salmon <span class="logo-sub">英語スピーチ練習</span></div>
+      <div class="tagline">自分の言葉で話す力を、6つのステップで</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('basic',this)">基本編</button>
+    <button class="tab" onclick="switchTab('applied',this)">応用編</button>
+    <button class="tab" onclick="switchTab('biz',this)">ビジネス英語編</button>
+  </div>
+  <div class="grid" id="topic-grid"></div>
+  <div class="free-row">
+    <input class="free-in" id="free-topic" placeholder="または自由にトピックを入力… 例：「好きなアニメについて」"/>
+    <button class="btn btn-ghost" style="white-space:nowrap;flex-shrink:0" onclick="useFree()">これで始める</button>
+  </div>
+  <div class="row">
+    <button class="btn btn-salmon" id="start-btn" disabled onclick="startSession()">このトピックで練習を始める →</button>
+    <span id="sel-label" style="font-size:13px;color:var(--muted)"></span>
+  </div>
+</div>
+
+<!-- セッション -->
+<div id="scr-session" style="display:none">
+  <div class="top-nav">
+    <div class="topic-label">トピック：<strong id="topic-disp"></strong></div>
+    <button class="btn btn-ghost" style="padding:5px 12px;font-size:12px" onclick="goHome()">← トップへ</button>
+  </div>
+  <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
+  <div class="strip" id="strip"></div>
+  <div id="step-area"></div>
+</div>
+
+<!-- 完了画面 -->
+<div id="scr-done" style="display:none">
+  <div class="finish-wrap">
+    <div style="font-size:48px;margin-bottom:14px">🎉</div>
+    <div class="finish-title">セッション完了！</div>
+    <div class="finish-sub">SALMON を 1 周しました。<br>毎日続けることで、話す力は確実に伸びます。</div>
+    <div class="row" style="justify-content:center;gap:10px">
+      <button class="btn btn-salmon" onclick="goHome()">次のトピックを選ぶ</button>
+      <button class="btn btn-ghost" onclick="restartSame()">同じトピックでもう一度</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+const TOPICS={
+  basic:["自己紹介","趣味や好きなこと","好きな食べ物やレストラン","好きな本や映画","学校や仕事","思い出に残っている旅行先","地元のおすすめスポット","自分の夢や目標","日本文化の紹介","直近楽しみな予定"],
+  applied:["理想的な1日の過ごし方","好きな季節とその理由","忘れられない旅行の思い出","行ってみたい国とその理由","理想の働き方とは","テクノロジーが生活に与えた影響","自分の強みと弱み","尊敬する人について","自分の目標と成功の定義","人生で最も重要なスキル"],
+  biz:["自己紹介（ビジネス場面）","自分の仕事・役割の説明","チームやプロジェクトの紹介","会社・サービスのプレゼン","ミーティングでの意見発表","仕事上の課題と解決策","キャリアの目標","業界のトレンドについて","リモートワークの経験","交渉・提案の場面"]
+};
+const STEPS=[
+  {k:'S',label:'Speech',type:'speech',
+   desc:'まず1分間、英語でスピーチしましょう。スマホで録画しておくと次のステップで役立ちます。',
+   hint:'うまく話せなくてもOK。今の自分をそのまま記録することが大切です。'},
+  {k:'A',label:'Adjust sentences',type:'dictation',
+   desc:'録画を見ながら、話した内容をできるだけそのまま英語で書き出してください。これが「ディクテーション」です。',
+   hint:'完璧に再現しなくてOK。言えなかった部分は日本語でメモしても構いません。'},
+  {k:'L',label:'Listen to your speech',type:'listen',
+   desc:'録画を見ながら、自分の発音・イントネーション・リズムを確認してください。気になった点を書いてください。',
+   hint:'「th の音が難しかった」「文末が上がってしまった」など気づいたことを書いてください。'},
+  {k:'M',label:'Memorize vocabulary',type:'vocab',
+   desc:'スピーチ中に出てこなかった単語や表現を入力してください。例文付きで整理します。',
+   hint:'思い出せなかった日本語の単語をそのまま書いてもOKです。'},
+  {k:'O',label:'Output',type:'speech2',
+   desc:'改善した台本をもとに、もう一度スピーチしましょう。最初より自信を持って話せるはずです！',
+   hint:'今度は発音・イントネーション・スピードを意識して話してみましょう。'},
+  {k:'N',label:'Next speech',type:'next',
+   desc:'お疲れ様でした！今日の練習を振り返り、次のスピーチへのアドバイスをもらいましょう。',hint:''}
+];
+const QS_MAP={
+  "自己紹介":["あなたの名前・出身地・職業は？","趣味や最近ハマっていることは？","自分を一言で表すとしたら？","今一番力を入れていることは何？"],
+  "自己紹介（ビジネス場面）":["会社名・部署・役職は？","担当している業務の概要は？","今関わっているプロジェクトは？","仕事で大切にしていることは？"],
+  "自分の仕事・役割の説明":["どんな業界・会社で働いていますか？","具体的にどんな業務を担当していますか？","チームの規模や体制は？","仕事のやりがいや難しさは？"],
+  "趣味や好きなこと":["最近一番楽しんでいる趣味は？","いつから始めましたか？","どんなところが好きですか？","誰かと一緒にやりますか？"],
+  "好きな食べ物やレストラン":["一番好きな食べ物は何ですか？","よく行くお気に入りのお店は？","その食べ物の何が好きですか？","特別な時に食べる料理は？"],
+  "思い出に残っている旅行先":["どこに行きましたか？","誰と、いつ行きましたか？","一番印象に残った場面は？","また行きたいですか？"],
+  "理想の働き方とは":["リモートとオフィス、どちらが好きですか？","理想の1日のスケジュールは？","仕事とプライベートのバランスは？","どんな環境で一番力を発揮できますか？"],
+  "キャリアの目標":["5年後・10年後のビジョンは？","今取り組んでいるスキルアップは？","どんな専門家になりたいですか？","そのために今何をしていますか？"]
+};
+
+let tab='basic', topic=null, step=0, data={}, apiKey='';
+let timerInt=null, timerSec=60, timerRunning=false;
+const isBiz=()=>TOPICS.biz.includes(topic);
+
+function saveKey(){
+  const k=(document.getElementById('api-key-input').value||'').trim();
+  if(!k.startsWith('sk-ant-')){
+    alert('APIキーは sk-ant- から始まります。正しいキーを入力してください。');
+    return;
+  }
+  apiKey=k;
+  document.getElementById('scr-key').style.display='none';
+  document.getElementById('scr-topic').style.display='block';
+  renderGrid();
+}
+document.getElementById('api-key-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveKey();});
+
+function switchTab(t,el){
+  tab=t; topic=null;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('free-topic').value='';
+  document.getElementById('start-btn').disabled=true;
+  document.getElementById('sel-label').textContent='';
+  renderGrid();
+}
+function renderGrid(){
+  const g=document.getElementById('topic-grid'); g.innerHTML='';
+  TOPICS[tab].forEach(t=>{
+    const d=document.createElement('div');
+    d.className='tc'+(t===topic?' sel':'');
+    d.textContent=t;
+    d.onclick=()=>{
+      topic=t;
+      document.getElementById('free-topic').value='';
+      renderGrid();
+      document.getElementById('start-btn').disabled=false;
+      document.getElementById('sel-label').textContent='「'+t+'」を選択中';
+    };
+    g.appendChild(d);
+  });
+}
+function useFree(){
+  const v=document.getElementById('free-topic').value.trim();
+  if(!v)return;
+  topic=v; renderGrid();
+  document.getElementById('start-btn').disabled=false;
+  document.getElementById('sel-label').textContent='「'+v+'」を選択中';
+}
+function startSession(){
+  if(!topic){const v=document.getElementById('free-topic').value.trim();if(!v)return;topic=v;}
+  step=0; data={topic};
+  document.getElementById('scr-topic').style.display='none';
+  document.getElementById('scr-session').style.display='block';
+  document.getElementById('topic-disp').textContent=topic;
+  renderStep();
+}
+function getQs(){
+  if(QS_MAP[topic])return QS_MAP[topic];
+  if(isBiz())return["あなたの役割や担当業務は？","最近取り組んだ仕事の例は？","チームや会社にどう貢献していますか？","仕事で直面している課題は？"];
+  return["このトピックで最初に思い浮かぶことは？","具体的なエピソードはありますか？","誰かに伝えたい一番大事なポイントは？","このトピックがあなたにとって特別な理由は？"];
+}
+function renderStep(){
+  document.getElementById('pbar').style.width=Math.round(step/STEPS.length*100)+'%';
+  document.getElementById('strip').innerHTML=STEPS.map((s,i)=>
+    `<div class="sp ${i===step?'on':i<step?'done':''}"><span class="sp-dot"></span>${s.k} – ${s.label}</div>`
+  ).join('');
+  const s=STEPS[step];
+  const area=document.getElementById('step-area');
+  if(s.type==='speech'||s.type==='speech2'){area.innerHTML=speechHTML(s);timerSec=60;timerRunning=false;}
+  else if(s.type==='dictation')area.innerHTML=dictHTML(s);
+  else if(s.type==='listen')area.innerHTML=listenHTML(s);
+  else if(s.type==='vocab')area.innerHTML=vocabHTML(s);
+  else if(s.type==='next'){area.innerHTML=nextHTML(s);callClaude(nextPrompt(),'coach-next');}
+}
+
+function speechHTML(s){
+  const qs=getQs();
+  return`<div class="card">
+  <div class="sname">${s.label} <span class="badge">${s.k}</span></div>
+  <div class="sdesc">${s.desc}</div>
+  <div class="qs-box"><div class="qs-label">話すヒント — こんな内容を盛り込んでみよう</div>
+  <ul class="qs-list">${qs.map(q=>`<li>${q}</li>`).join('')}</ul></div>
+  <div class="hint-box">${s.hint}</div>
+  <div class="timer-big" id="tdisp">1:00</div>
+  <div class="timer-sub" id="tsub">準備ができたらタイマーをスタート</div>
+  <div class="tbar"><div class="tfill" id="tfill" style="width:100%"></div></div>
+  <div class="row">
+    <button class="btn btn-salmon" id="tbtn" onclick="toggleTimer()">タイマーをスタート</button>
+    <button class="btn btn-primary" onclick="nextStep()">スピーチ完了 ✓</button>
+  </div>
+</div>`;
+}
+function dictHTML(s){
+  return`<div class="card">
+  <div class="sname">${s.label} <span class="badge">${s.k}</span></div>
+  <div class="sdesc">${s.desc}</div>
+  <div class="hint-box">${s.hint}</div>
+  <textarea id="dicta" placeholder="録画を見ながら聞こえた英語をそのまま書き出してください..." rows="6"></textarea>
+  <div class="row" style="margin-top:10px">
+    <button class="btn btn-salmon" id="fb-btn" onclick="submitDict()">文法・表現のフィードバックをもらう ↗</button>
+  </div>
+</div><div id="coach-dict"></div>`;
+}
+function listenHTML(s){
+  return`<div class="card">
+  <div class="sname">${s.label} <span class="badge">${s.k}</span></div>
+  <div class="sdesc">${s.desc}</div>
+  <div class="hint-box">${s.hint}</div>
+  <textarea id="listen-in" placeholder="例：「th の音がうまく出なかった」「文末が日本語っぽかった」など..." rows="4"></textarea>
+  <div class="row" style="margin-top:10px">
+    <button class="btn btn-salmon" id="listen-btn" onclick="submitListen()">発音アドバイスをもらう ↗</button>
+    <button class="btn btn-ghost" onclick="nextStep()">スキップ</button>
+  </div>
+</div><div id="coach-listen"></div>`;
+}
+function vocabHTML(s){
+  return`<div class="card">
+  <div class="sname">${s.label} <span class="badge">${s.k}</span></div>
+  <div class="sdesc">${s.desc}</div>
+  <div class="hint-box">${s.hint}</div>
+  <textarea id="vocab-in" placeholder="例：「nevertheless」「提案する という単語が出なかった」など..." rows="4"></textarea>
+  <div class="row" style="margin-top:10px">
+    <button class="btn btn-salmon" id="vocab-btn" onclick="submitVocab()">単語を整理してもらう ↗</button>
+    <button class="btn btn-ghost" onclick="nextStep()">スキップ</button>
+  </div>
+</div><div id="coach-vocab"></div>`;
+}
+function nextHTML(s){
+  return`<div class="card">
+  <div class="sname">${s.label} <span class="badge">${s.k}</span></div>
+  <div class="sdesc">${s.desc}</div>
+  <div id="coach-next"><div class="coach-wrap"><div class="coach-label">Claude コーチ</div>
+  <div class="coach-text"><span class="dots"><span></span><span></span><span></span></span></div></div></div>
+  <div style="margin-top:1rem">
+    <button class="btn btn-salmon" onclick="finishSession()">セッションを完了する 🎉</button>
+  </div>
+</div>`;
+}
+
+async function callClaude(prompt, targetId){
+  const el=document.getElementById(targetId);
+  if(el)el.innerHTML=`<div class="coach-wrap"><div class="coach-label">Claude コーチ</div><div class="coach-text"><span class="dots"><span></span><span></span><span></span></span></div></div>`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-allow-browser':'true'
+      },
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1200,messages:[{role:'user',content:prompt}]})
+    });
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
+    const d=await res.json();
+    if(d.error)throw new Error(d.error.message);
+    const text=d.content?.filter(b=>b.type==='text').map(b=>b.text).join('')||'応答を取得できませんでした。';
+    if(el)el.innerHTML=`<div class="coach-wrap"><div class="coach-label">Claude コーチ</div><div class="coach-text">${text}</div></div>`;
+    return text;
+  }catch(e){
+    if(el)el.innerHTML=`<div class="coach-wrap"><div class="coach-label">Claude コーチ</div><div class="coach-text" style="color:var(--muted)">エラー: ${e.message}</div></div>`;
+    throw e;
+  }
+}
+
+function withBtn(btnId,label,fn){
+  return async()=>{
+    const b=document.getElementById(btnId);
+    if(b){b.disabled=true;b.textContent='送信中…';}
+    try{await fn();}
+    catch(e){if(b){b.disabled=false;b.textContent=label;}}
+  };
+}
+function appendNext(id){
+  setTimeout(()=>{
+    const el=document.getElementById(id);
+    if(el&&!el.querySelector('.nxt')){
+      const d=document.createElement('div');
+      d.className='row nxt';d.style.marginTop='10px';
+      d.innerHTML=`<button class="btn btn-primary" onclick="nextStep()">次のステップへ →</button>`;
+      el.appendChild(d);
+    }
+  },50);
+}
+
+const submitDict=withBtn('fb-btn','文法・表現のフィードバックをもらう ↗',async()=>{
+  const text=(document.getElementById('dicta')?.value||'').trim();
+  if(!text){alert('書き出した内容を入力してください。');throw new Error('empty');}
+  data.dictation=text;
+  const biz=isBiz();
+  await callClaude(`英語学習者が「${topic}」についてスピーチし、録画を見ながらディクテーションしました。${biz?'ビジネス英語の練習です。':''}
+
+【書き出した内容】
+${text}
+
+以下の観点で具体的にフィードバックしてください（日本語）：
+1. 文法の改善点（間違いを引用して正しい形を提示）
+2. より自然な表現への言い換え（2〜3例、${biz?'ビジネスシーン向け':'日常会話向け'}）
+3. 構成・内容へのアドバイス
+4. 励ましの一言`,'coach-dict');
+  appendNext('coach-dict');
+});
+
+const submitListen=withBtn('listen-btn','発音アドバイスをもらう ↗',async()=>{
+  const note=(document.getElementById('listen-in')?.value||'').trim();
+  await callClaude(`英語学習者が「${topic}」についてスピーチし、録画で発音を確認しました。
+気になった点：${note||'（特に記入なし）'}
+ディクテーション内容：${data.dictation||'（記録なし）'}
+日本人英語学習者が「${topic}」を話す際の発音・イントネーションのポイントを3つ、練習法と一緒に日本語で教えてください。`,'coach-listen');
+  appendNext('coach-listen');
+});
+
+const submitVocab=withBtn('vocab-btn','単語を整理してもらう ↗',async()=>{
+  const words=(document.getElementById('vocab-in')?.value||'').trim();
+  if(!words){nextStep();return;}
+  data.vocab=words;
+  await callClaude(`英語学習者が「${topic}」のスピーチで出てこなかった単語・表現：
+${words}
+各表現について日本語で整理してください：意味・使い方・「${topic}」の文脈での例文・覚えるコツ`,'coach-vocab');
+  appendNext('coach-vocab');
+});
+
+function nextPrompt(){
+  return`英語学習者が「${topic}」のSALMON式スピーチ練習を完走しました。日本語で200文字以内で：1. 練習を労う言葉 2. 次のスピーチで意識する1点 3. 継続を後押しする一言`;
+}
+
+function toggleTimer(){
+  if(timerRunning){clearInterval(timerInt);timerRunning=false;document.getElementById('tbtn').textContent='再スタート';return;}
+  timerRunning=true;document.getElementById('tbtn').textContent='一時停止';
+  timerInt=setInterval(()=>{
+    timerSec--;
+    const m=Math.floor(timerSec/60),s=timerSec%60;
+    const td=document.getElementById('tdisp'),tf=document.getElementById('tfill'),ts=document.getElementById('tsub');
+    if(td)td.textContent=m+':'+(s<10?'0':'')+s;
+    if(tf)tf.style.width=Math.max(0,timerSec/60*100)+'%';
+    if(timerSec<=0){clearInterval(timerInt);timerRunning=false;
+      if(td)td.textContent='0:00';
+      if(ts)ts.textContent='タイムアップ！「スピーチ完了」を押してください。';
+    }else if(timerSec<=10&&ts)ts.textContent='あと '+timerSec+' 秒！';
+    else if(ts)ts.textContent='話し続けてください…';
+  },1000);
+}
+
+function nextStep(){clearInterval(timerInt);timerRunning=false;step++;if(step>=STEPS.length)finishSession();else renderStep();}
+function finishSession(){clearInterval(timerInt);document.getElementById('scr-session').style.display='none';document.getElementById('scr-done').style.display='block';}
+function goHome(){
+  clearInterval(timerInt);
+  ['scr-session','scr-done'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('scr-topic').style.display='block';
+}
+function restartSame(){step=0;data={topic};document.getElementById('scr-done').style.display='none';document.getElementById('scr-session').style.display='block';renderStep();}
+</script>
+</body>
+</html>
